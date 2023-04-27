@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Animation
 {
     public class AnimationManager : MonoBehaviour
     {
-        private Animator _animator;
+        private static Animator _animator;
         private float _currentBlendAmount;
         private float _initialTime;
         private float _endTime;
@@ -17,6 +19,11 @@ namespace Animation
             _animator = GetComponent<Animator>();
         }
 
+        public static void OnAnyVelocityChanged(float velocity)
+        {
+            _animator.SetFloat("Velocity", velocity);
+        }
+        
         public void GetTorchAnimation()
         {
             _blendWeightCoroutine = StartCoroutine(IncrementBlendAmount());

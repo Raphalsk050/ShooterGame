@@ -13,12 +13,17 @@ namespace Core
         public bool lookToRotation;
         public bool rotateTowardsMovement;
         public float speed = 10f;
+
+        public delegate void OnVelocityChanged(float currentVelocity);
+        public OnVelocityChanged VelocityChanged;
+        
         
         private Quaternion _controllerRotation;
         private static Vector3 _movementVector;
         private static float _mouseX;
         private static float _mouseY;
         private Vector3 _velocity;
+        private float _lastVelocity;
         private Vector3 _lastMousePosition;
         private Quaternion _currentVelocityDirection;
         private Vector3 _lastPosition;
@@ -37,6 +42,7 @@ namespace Core
             _playerMeshTransform = GameObject.FindWithTag("PlayerMesh").transform;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            VelocityChanged += AnimationManager.OnAnyVelocityChanged;
         }
 
         private void OnApplicationQuit()
@@ -60,8 +66,8 @@ namespace Core
             MouseYPosition();
             UseControllerRotation();
             Jump();
-            
-
+            CompareVelocity();
+            _playerMeshTransform.position = transform.position + Vector3.up * -1f;
             _verticalSpeed -= _gravity * Time.deltaTime;
             
             var upDirection = new Vector3(0, 1, 0) * _verticalSpeed;
@@ -75,6 +81,16 @@ namespace Core
             _mouseX += Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         }
 
+        private void CompareVelocity()
+        {
+            var currentVelocity = _velocity.magnitude;
+            if (_lastVelocity != currentVelocity)
+            {
+                VelocityChanged?.Invoke(currentVelocity);
+                _lastVelocity = _velocity.magnitude;
+            }
+        }
+        
         private void MouseYPosition()
         {
             _mouseY = Mathf.Clamp(_mouseY - Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime, -90f,60f);
@@ -119,7 +135,7 @@ namespace Core
             if (_velocity.magnitude > 0)
             {
                 _currentVelocityDirection = Quaternion.LookRotation(_velocity, Vector3.up);
-                _playerMeshTransform.rotation = Quaternion.Slerp(playerMeshRotation, _currentVelocityDirection, Time.deltaTime * 5f);
+                _playerMeshTransform.rotation = Quaternion.Slerp(playerMeshRotation, _currentVelocityDirection, Time.deltaTime * 10f);
                 
             }
         }
