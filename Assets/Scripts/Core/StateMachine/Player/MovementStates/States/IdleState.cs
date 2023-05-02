@@ -1,6 +1,7 @@
+using Core.StateMachine.Player.MovementStates.StateManagers;
 using UnityEngine;
 
-namespace Core.StateMachine.Player.MovementStates
+namespace Core.StateMachine.Player.MovementStates.States
 {
     public class IdleState : PlayerBaseState
     {
@@ -37,7 +38,7 @@ namespace Core.StateMachine.Player.MovementStates
         {
             if (Mathf.Abs(Context.GetPlayerVelocity()) > 0.5f)
             {
-                SwitchState(Factory.Walk());
+                SwitchState(((PlayerStateFactory)Factory).Walk());
             }
         }
     }

@@ -1,4 +1,5 @@
 using Core.StateMachine.Player;
+using Core.StateMachine.Player.MovementStates.StateManagers;
 using UnityEngine;
 
 namespace Core.StateMachine
@@ -10,5 +11,7 @@ namespace Core.StateMachine
         public abstract void OnExitingState();
         public abstract void OnStateExit();
         public abstract void UpdateState();
+        protected abstract void SwitchState(PlayerBaseState newState);
+        protected abstract void CheckSwitchStates();
     }
 }

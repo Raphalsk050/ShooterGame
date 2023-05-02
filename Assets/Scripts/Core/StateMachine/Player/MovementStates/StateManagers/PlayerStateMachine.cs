@@ -1,7 +1,6 @@
-using Core.StateMachine.Player;
 using UnityEngine;
 
-namespace Core.StateMachine
+namespace Core.StateMachine.Player.MovementStates.StateManagers
 {
     public class PlayerStateMachine : MonoBehaviour
     {

@@ -1,11 +1,11 @@
-namespace Core.StateMachine.Player
+namespace Core.StateMachine.Player.MovementStates.StateManagers
 {
     public class PlayerBaseState : BaseState
     {
         protected PlayerStateMachine Context;
-        protected PlayerStateFactory Factory;
+        protected StateFactory Factory;
         
-        public PlayerBaseState(PlayerStateMachine context, PlayerStateFactory factory)
+        public PlayerBaseState(PlayerStateMachine context, StateFactory factory)
         {
             Context = context;
             Factory = factory;
@@ -36,13 +36,10 @@ namespace Core.StateMachine.Player
             
         }
 
-        protected void SwitchState(PlayerBaseState newState)
+        protected override void SwitchState(PlayerBaseState newState)
         {
             //finishes this state
             OnExitingState();
-            
-            
-            
             
             //Initializes the given state
             newState.OnEnteringState();
@@ -51,7 +48,7 @@ namespace Core.StateMachine.Player
             Context.CurrentState = newState;
         }
 
-        protected virtual void CheckSwitchStates()
+        protected override void CheckSwitchStates()
         {
             
         }

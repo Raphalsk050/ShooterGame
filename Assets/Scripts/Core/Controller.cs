@@ -1,6 +1,8 @@
 using System;
 using Animation;
 using Core.StateMachine;
+using Core.StateMachine.Player;
+using Core.StateMachine.Player.MovementStates.StateManagers;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -68,17 +70,16 @@ namespace Core
 
         private void Update()
         {
-            var verticalDirection = _controllerYaw * Vector3.forward * Input.GetAxisRaw("Vertical");
-            var horizontalDirection = _controllerYaw * Vector3.right * Input.GetAxisRaw("Horizontal");
+            var verticalDirection = _controllerYaw * Vector3.forward * Input.GetAxisRaw("Vertical") * Time.deltaTime;
+            var horizontalDirection = _controllerYaw * Vector3.right * Input.GetAxisRaw("Horizontal") * Time.deltaTime;
             
             MouseXPosition();
             MouseYPosition();
             UseControllerRotation();
             Jump();
             CompareVelocity();
-            _playerMeshTransform.position = transform.position + Vector3.up * -1f;
             _verticalSpeed -= _gravity * Time.deltaTime;
-
+            _playerMeshTransform.position = transform.position + Vector3.up * -1f;
             var upDirection = new Vector3(0, 1, 0) * _verticalSpeed;
             var groundVelocity = (verticalDirection + horizontalDirection).normalized * Speed;
             _movementVector = groundVelocity + upDirection;
@@ -87,7 +88,7 @@ namespace Core
             {
                 OnMovementVectorInputChanged?.Invoke(groundVelocity);
             }
-            
+
             _characterController.Move(_movementVector * Time.deltaTime);
         }
 
@@ -148,9 +149,7 @@ namespace Core
 
             if (_velocity.magnitude > 0)
             {
-                var vector = new Vector3(_velocity.x * 700f, 0, _velocity.z);
-                var finalPoint = _playerMeshTransform.right * Input.GetAxis("Mouse X") * Speed;
-                Debug.DrawLine(transform.position, transform.position + _velocity);
+                var finalPoint = _playerMeshTransform.right * Input.GetAxis("Mouse X");
                 _currentVelocityDirection = Quaternion.LookRotation(_velocity + finalPoint, Vector3.up);
                 _playerMeshTransform.rotation =
                     Quaternion.Slerp(playerMeshRotation, _currentVelocityDirection, Time.deltaTime * 10f);

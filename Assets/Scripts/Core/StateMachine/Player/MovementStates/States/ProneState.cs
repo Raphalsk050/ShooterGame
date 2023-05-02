@@ -1,8 +1,10 @@
-namespace Core.StateMachine.Player.MovementStates
+using Core.StateMachine.Player.MovementStates.StateManagers;
+
+namespace Core.StateMachine.Player.MovementStates.States
 {
-    public class CrouchState : PlayerBaseState
+    public class ProneState : PlayerBaseState
     {
-        public CrouchState(PlayerStateMachine context, PlayerStateFactory factory) : base(context, factory)
+        public ProneState(PlayerStateMachine context, PlayerStateFactory factory) : base(context, factory)
         {
         }
         
